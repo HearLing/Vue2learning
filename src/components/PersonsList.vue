@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import PubSub from 'pubsub-js'
 export default {
   name: "PersonList",
   data() {
@@ -30,16 +31,27 @@ export default {
       },
     };
   },
+  methods:{
+    saveData(_,dataObj){
+      // ...this.info 是把info里面所有属性都放在这，要是重名以后面的为主
+      this.info = {...this.info,...dataObj};
+    }
+  },
   mounted() {
     /**
      * 通过事件总线拿到search组件请求来的数据
      * 前提是App.js里面安装了事件总线
      */
-    this.$bus.$on("getListData", (dataObj) => {
-      // ...this.info 是把info里面所有属性都放在这，要是重名以后面的为主
-      this.info = {...this.info,...dataObj};
-    });
+    // this.$bus.$on("getListData", (dataObj) => {
+    //   // ...this.info 是把info里面所有属性都放在这，要是重名以后面的为主
+    //   this.info = {...this.info,...dataObj};
+    // });
+    PubSub.subscribe('getListData', this.saveData)
   },
+  beforeDestroy(){
+    //   this.$bus.$off('get-list-data',this.saveData)
+    PubSub.unsubscribe('get-list-data',this.saveData)
+  }
 };
 </script>
 
