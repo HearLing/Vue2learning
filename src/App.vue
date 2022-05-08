@@ -1,19 +1,16 @@
 <template>
   <div id="app">
-    <Search /> 
-    <PersonsList/>
+    <Count /> 
   </div>
 </template>
 
 <script>
-import Search from './components/Search.vue'
-import PersonsList from './components/PersonsList'
+import Count from './components/Count.vue'
 
 export default {
   name: 'App',
   components: {
-    Search,
-    PersonsList
+    Count,
   }
 }
 </script>
