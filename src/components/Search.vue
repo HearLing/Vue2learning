@@ -13,8 +13,9 @@
 
 <script>
 import axios from "axios";
+import PubSub from 'pubsub-js'
 export default {
-  name: "search",
+  name: "SearchC",
   data() {
     return {
       inputValue: "",// 用户输入搜索的内容
@@ -23,16 +24,20 @@ export default {
   methods: {
     searchUsers() {
       // 请求前，更新list数据
-      this.$bus.$emit("getListData",{isFirst:false,isLoading:true,errMsg:'',users:[]})
+      //  this.$bus.$emit("getListData",{isFirst:false,isLoading:true,errMsg:'',users:[]})
+      PubSub.publish("getListData",{isFirst:false,isLoading:true,errMsg:'',users:[]})
       // `...`是模板字符串,意思就是字符串里面有模板,这样就能识别里面的模板
       axios.get(`http://api.github.com/search/users?q=${this.inputValue}`).then(
         (response) => {
           // 得到数据，触发自定义事件
-          this.$bus.$emit('getListData',{isLoading:false,errMsg:'',users:response.data.items})
+          // this.$bus.$emit('getListData',{isLoading:false,errMsg:'',users:response.data.items})
+          
+          PubSub.publish('getListData',{isLoading:false,errMsg:'',users:response.data.items})
         },
         (error) => {
           // 请求后更新list数据
-          this.$bus.$emit("getListData",{isLoading:false,errMsg:error.message,users:[]})
+          // this.$bus.$emit("getListData",{isLoading:false,errMsg:error.message,users:[]})
+          PubSub.publish("getListData",{isLoading:false,errMsg:error.message,users:[]})
         }
       );
     },
